@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 Anime DDoS Control Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a0b1a 0%, #2d1b2d 100%);
+            font-family: 'Courier New', 'Segoe UI', monospace;
+            color: #ffb7c5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Pink Glassmorphism */
+        .glass-card {
+            background: rgba(255, 105, 180, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #ff69b4;
+            text-shadow: 0 0 20px #ff69b4;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #ff69b4; }
+            to { text-shadow: 0 0 30px #ff1493; }
+        }
+        
+        .anime-girl {
+            font-size: 3em;
+            animation: bounce 1s ease infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            border-left: 4px solid #ff69b4;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #ffb7c5;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff69b4;
+            margin-top: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ff69b4;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #ff69b4;
+            border-radius: 10px;
+            color: #ffb7c5;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ff1493;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+        }
+        
+        button {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+            font-family: monospace;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .btn-start {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+        }
+        
+        .btn-stop {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+        }
+        
+        .method-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .method-btn {
+            background: rgba(255, 105, 180, 0.2);
+            border: 1px solid #ff69b4;
+        }
+        
+        .method-btn.active {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            box-shadow: 0 0 15px #ff69b4;
+        }
+        
+        .status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+            margin-right: 8px;
+        }
+        
+        .status.active {
+            background: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
+        .status.idle {
+            background: #ff4444;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 0.8em;
+            color: #ff69b4;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glass-card header">
+            <div class="anime-girl">🌸 ╱|、 (˚ˎ 。7 |、˜〵 じしˍ,)ノ 🌸</div>
+            <h1>🌸 ANIME DDoS CONTROL PANEL 🌸</h1>
+            <p>"Kawaii but Deadly ~ Senpai Notice Me!"</p>
+        </div>
+        
+        <div class="glass-card">
+            <h2>🎯 Target Configuration</h2>
+            <div class="input-group">
+                <label>🌐 Target IP or Domain:</label>
+                <input type="text" id="target" placeholder="example: 192.168.1.1 or google.com">
+            </div>
+            <div class="input-group">
+                <label>🔌 Port:</label>
+                <input type="number" id="port" value="12000" placeholder="12000">
+            </div>
+            
+            <h2>⚔️ Select Attack Method</h2>
+            <div class="method-buttons">
+                <button class="method-btn" data-method="http">🔥 HTTP Flood</button>
+                <button class="method-btn" data-method="slowloris">🐌 Slowloris</button>
+                <button class="method-btn" data-method="tcp">💀 TCP Flood</button>
+                <button class="method-btn" data-method="udp">📦 UDP Flood</button>
+                <button class="method-btn" data-method="syn">⚡ SYN Flood</button>
+                <button class="method-btn" data-method="icmp">📡 ICMP Flood</button>
+                <button class="method-btn" data-method="hades">👑 HADES MODE</button>
+            </div>
+            <input type="hidden" id="selected-method" value="http">
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn-start" id="start-btn">🚀 START ATTACK</button>
+                <button class="btn-stop" id="stop-btn">🛑 STOP ATTACK</button>
+            </div>
+        </div>
+        
+        <div class="glass-card">
+            <h2>📊 Real-time Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Status</div>
+                    <div class="stat-value">
+                        <span class="status" id="status-led"></span>
+                        <span id="status-text">IDLE</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Target</div>
+                    <div class="stat-value" id="stat-target">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Method</div>
+                    <div class="stat-value" id="stat-method">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Packets Sent</div>
+                    <div class="stat-value" id="stat-packets">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Data Sent</div>
+                    <div class="stat-value" id="stat-bytes">0 MB</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Threads</div>
+                    <div class="stat-value" id="stat-threads">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🌸 For educational & authorized testing only! 🌸</p>
+            <p>💀 F3MB0Y-AI presents: Anime DDoS Suite v3.0 💀</p>
+        </div>
+    </div>
+    
+    <script>
+        let selectedMethod = 'http';
+        
+        // Method selection
+        document.querySelectorAll('.method-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedMethod = btn.dataset.method;
+                document.getElementById('selected-method').value = selectedMethod;
+            });
+        });
+        
+        // Start attack
+        document.getElementById('start-btn').addEventListener('click', async () => {
+            const target = document.getElementById('target').value;
+            const port = document.getElementById('port').value;
+            
+            if (!target) {
+                alert('🌸 Please enter target IP or domain first!');
+                return;
+            }
+            
+            const response = await fetch('/api/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    target: target,
+                    port: port,
+                    method: selectedMethod
+                })
+            });
+            
+            const data = await response.json();
+            if (data.error) {
+                alert('Error: ' + data.error);
+            } else {
+                alert('✅ ' + data.message);
+            }
+        });
+        
+        // Stop attack
+        document.getElementById('stop-btn').addEventListener('click', async () => {
+            const response = await fetch('/api/stop', { method: 'POST' });
+            const data = await response.json();
+            alert('🛑 ' + data.message);
+        });
+        
+        // Update stats
+        async function updateStats() {
+            const response = await fetch('/api/stats');
+            const stats = await response.json();
+            
+            document.getElementById('stat-target').innerText = stats.running ? `${stats.target}:${stats.port}` : '-';
+            document.getElementById('stat-method').innerText = stats.method;
+            document.getElementById('stat-packets').innerText = stats.total_packets.toLocaleString();
+            document.getElementById('stat-bytes').innerText = stats.total_mb + ' MB';
+            document.getElementById('stat-threads').innerText = stats.active_threads;
+            
+            const statusLed = document.getElementById('status-led');
+            const statusText = document.getElementById('status-text');
+            if (stats.running) {
+                statusLed.className = 'status active';
+                statusText.innerText = 'ATTACKING 🔥';
+            } else {
+                statusLed.className = 'status idle';
+                statusText.innerText = 'IDLE 💤';
+            }
+        }
+        
+        // Auto refresh stats every 1 second
+        setInterval(updateStats, 1000);
+        updateStats();
+        
+        // Default select first method
+        document.querySelector('.method-btn').classList.add('active');
+    </script>
+</body>
+  </html>
